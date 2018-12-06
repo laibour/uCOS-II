@@ -1,0 +1,20 @@
+#ifndef __BLUETOOTH_HAL_H
+#define __BLUETOOTH_HAL_H
+
+
+/* BLUETOOTH电源控制端口 */
+#define	BLUETOOTH_POWER_RCC		RCC_APB2Periph_GPIOC
+#define	BLUETOOTH_POWER_PIN		GPIO_Pin_0
+#define	BLUETOOTH_POWER_GPIO	GPIOC
+#define BLUETOOTH_POWER_ON()	GPIO_SetBits(BLUETOOTH_POWER_GPIO, BLUETOOTH_POWER_PIN)		// BLUETOOTH POWER ON
+#define BLUETOOTH_POWER_OFF()	GPIO_ResetBits(BLUETOOTH_POWER_GPIO, BLUETOOTH_POWER_PIN)	// BLUETOOTH POWER OFF
+
+
+void USART1_Init(void);
+void BluetoothIOInit(void);
+void USART1_SendString(uint8_t *ch);
+void USART1_SendData(uint8_t *ch, uint8_t num);
+
+
+#endif
+
