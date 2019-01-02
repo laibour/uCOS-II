@@ -7,7 +7,7 @@
 volatile uint8_t I2C_DEVICE_ADDR;
 static PT_MemoryDriver g_ptMemoryDriverHead;
 
-// ×¢²áËùÓĞ´æ´¢Éè±¸
+// æ³¨å†Œæ‰€æœ‰å­˜å‚¨è®¾å¤‡
 void MemoryRegister(void)
 {
 	MRAMRegister();
@@ -61,7 +61,7 @@ void MemoryBufferWrite(char *pcName, uint8_t* pBuffer, uint32_t WriteAddr, uint1
 }
 
 
-// ³õÊ¼»¯ËùÓĞµÄÍøÂçÉè±¸
+// åˆå§‹åŒ–æ‰€æœ‰çš„ç½‘ç»œè®¾å¤‡
 void MemoryDeviceInit(void)
 {
 	PT_MemoryDriver ptTmp = g_ptMemoryDriverHead;
@@ -74,7 +74,7 @@ void MemoryDeviceInit(void)
 }
 
 
-// ×¢²áPT_MemoryDriver½á¹¹Ìå
+// æ³¨å†ŒPT_MemoryDriverç»“æ„ä½“
 void RegisterMemoryDriver(PT_MemoryDriver ptMemoryDriver)
 {
 	PT_MemoryDriver ptTmp;

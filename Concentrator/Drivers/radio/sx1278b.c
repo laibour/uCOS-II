@@ -19,7 +19,7 @@ T_BLoRaSettings SX1278B_LoRaSettings =
 	6,				  // PreambleLength
 	0x12,			  // SyncWord
     0,                // RxSingleOn [0: Continuous, 1 Single]
-    0,                // FreqHopOn [0: OFF, 1: ON]£¨Ã¯∆µ
+    0,                // FreqHopOn [0: OFF, 1: ON]ÔºåË∑≥È¢ë
     4,                // HopPeriod Hops every frequency hopping period symbols
     100,              // TxPacketTimeout
     100,              // RxPacketTimeout
@@ -100,11 +100,11 @@ int SX1278BInit( void )
 	RFBIOInit();
 	
     // Initialize LoRa registers structure
-    SX1278BLR = ( tSX1278BLR* )SX1278BRegs;	// SX1278Bºƒ¥Ê∆˜”≥…‰
+    SX1278BLR = ( tSX1278BLR* )SX1278BRegs;	// SX1278BÂØÑÂ≠òÂô®Êò†Â∞Ñ
 	
-    SX1278BInitIo( );		// SX1278B∂Àø⁄≥ı ºªØ
+    SX1278BInitIo( );		// SX1278BÁ´ØÂè£ÂàùÂßãÂåñ
     
-    SX1278BReset( );		// SX1278B∏¥Œª
+    SX1278BReset( );		// SX1278BÂ§ç‰Ωç
 	
 	// for test hard spi
 	SX1278BRead(0x06, &TempReg);
@@ -117,9 +117,9 @@ int SX1278BInit( void )
     LoRaOn = true;          	// LORA = 1
 	LoRaOnState = false;
 	
-    SX1278BSetLoRaOn(LoRaOn);	// …Ë÷√Œ™¿©∆µƒ£ Ω
+    SX1278BSetLoRaOn(LoRaOn);	// ËÆæÁΩÆ‰∏∫Êâ©È¢ëÊ®°Âºè
 	
-	/* …Ë÷√RFµƒ÷––ƒ∆µµ„ */
+	/* ËÆæÁΩÆRFÁöÑ‰∏≠ÂøÉÈ¢ëÁÇπ */
 	SX1278B_LoRaSettings.RFFrequency = LORA_FRE_BASE + SX1278BCongfig.RFChannel * LORA_FRE_STEP;
 	
 	BLoRaSettings = SX1278B_LoRaSettings;
@@ -176,7 +176,7 @@ void SX1278BSetLoRaOn( bool enable )
 
 	SX1278BLoRaSetOpMode( RFLR_OPMODE_SLEEP );
 	
-	/* …Ë÷√Œ™¿©∆µƒ£ Ω */
+	/* ËÆæÁΩÆ‰∏∫Êâ©È¢ëÊ®°Âºè */
 	SX1278BLR->RegOpMode = ( SX1278BLR->RegOpMode & RFLR_OPMODE_LONGRANGEMODE_MASK ) | RFLR_OPMODE_LONGRANGEMODE_ON;
 	SX1278BWrite( REG_LR_OPMODE, SX1278BLR->RegOpMode );
 	
@@ -251,7 +251,7 @@ uint32_t SX1278BGetPacketAfc( void )
 
 void SX1278BStartRx( void )
 {
-	SX1278BLoRaSetRFState( RFLR_STATE_RX_INIT );    //LoRa ÷–∂œΩ” ’◊¥Ã¨
+	SX1278BLoRaSetRFState( RFLR_STATE_RX_INIT );    //LoRa ‰∏≠Êñ≠Êé•Êî∂Áä∂ÊÄÅ
 }
 
 

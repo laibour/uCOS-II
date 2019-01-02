@@ -37,8 +37,8 @@ typedef struct sLoRaSettings
     uint8_t ErrorCoding;                // LORA [1: 4/5, 2: 4/6, 3: 4/7, 4: 4/8]
     bool CrcOn;                         // [0: OFF, 1: ON]
     bool ImplicitHeaderOn;              // [0: OFF, 1: ON]
-	uint16_t PreambleLength;			// Òıµ¼Âë³¤¶È
-	uint8_t SyncWord;					// Í¬²½×Ö
+	uint16_t PreambleLength;			// å¼•å¯¼ç é•¿åº¦
+	uint8_t SyncWord;					// åŒæ­¥å­—
     bool RxSingleOn;                    // [0: Continuous, 1 Single]
     bool FreqHopOn;                     // [0: OFF, 1: ON]
     uint8_t HopPeriod;                  // Hops every frequency hopping period symbols

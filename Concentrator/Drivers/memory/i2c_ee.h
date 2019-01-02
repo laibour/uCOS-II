@@ -10,8 +10,8 @@
 #define EEPROM_BLOCK2_ADDRESS 	0xA8   /* BLOCK2 ADDRESS */
 
 
-#define EPROM_24AA1025_WP_ON()	GPIO_SetBits(GPIOC, GPIO_Pin_6)		// EEPROM写保护开
-#define EPROM_24AA1025_WP_OFF()	GPIO_ResetBits(GPIOC, GPIO_Pin_6)	// EEPROM写保护关
+#define EPROM_24AA1025_WP_ON()	GPIO_SetBits(GPIOC, GPIO_Pin_6)		// EEPROM鍐欎繚鎶ゅ紑
+#define EPROM_24AA1025_WP_OFF()	GPIO_ResetBits(GPIOC, GPIO_Pin_6)	// EEPROM鍐欎繚鎶ゅ叧
 
 
 extern T_MemoryDriver EEPROMDriver;

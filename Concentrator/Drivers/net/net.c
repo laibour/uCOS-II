@@ -4,7 +4,7 @@
 #include "bluetooth.h"
 
 
-/* ÍøÂç²ãÉè±¸Ãû³Æ */
+/* ç½‘ç»œå±‚è®¾å¤‡åç§° */
 static char GPRS[] = "gprs";
 static char BLUETOOTH[] = "bluetooth";
 
@@ -37,7 +37,7 @@ void GPRSPutProcess(void)
 			memcpy(ptNetSendData->Data+14, ptNetCur->Data+2, 4);		// ConAddr
 			memcpy(ptNetSendData->Data+18, ptNetCur->DataPacketID, 2);	// DataFrameID
 			memset(ptNetSendData->Data+20, 0, 2);						// DataFrameSeq
-			if (*(ptNetCur->Data+10) != 0)	/* ÅĞ¶ÏÊÇ·ñÎª³¬Ê±Ö¸Áî */
+			if (*(ptNetCur->Data+10) != 0)	/* åˆ¤æ–­æ˜¯å¦ä¸ºè¶…æ—¶æŒ‡ä»¤ */
 			{
 				GPRSPutFlag = 1;
 				ptNetCur->TaskState = TASK_RUNNING;
@@ -65,24 +65,24 @@ void GPRSPutProcess(void)
 						ptNetSendData->Data[22] += 2;									  // DataLen+FuncCode				
 						memcpy(ptNetSendData->Data+23, ptNetCur->Data, 2);				  // 2 bytes FuncCode
 						memcpy(ptNetSendData->Data+25, ptNetCur->Data+11, MeterDataLen);  // Meter data
-						memset(ptNetSendData->Data+MeterDataLen+27, 0x16, 1);			  // end£¬2bytes crc reserved before
+						memset(ptNetSendData->Data+MeterDataLen+27, 0x16, 1);			  // endï¼Œ2bytes crc reserved before
 						ptNetSendData->Len = MeterDataLen + 28;				  			  // send length
 						break;
 					
 					case 0x2405:
 						if ( (k = FindMeterID(ptNetCur->Data+6)) != METER_SUM )
 						{
-							MemoryBufferRead(MRAM, (uint8_t *)&tSystemTime, REPORT_PARM_ADDR+sizeof(T_ReportParm)*k+1, sizeof(T_SystemTime)); // ¶Á±¨¸æÉÏ´«Ê±¼ä
+							MemoryBufferRead(MRAM, (uint8_t *)&tSystemTime, REPORT_PARM_ADDR+sizeof(T_ReportParm)*k+1, sizeof(T_SystemTime)); // è¯»æŠ¥å‘Šä¸Šä¼ æ—¶é—´
 						}
 						MeterDataLen -= 1;
-						ptNetSendData->Data[22] = (ptNetSendData->Data[22]+15-1);		  // DataLen£¬ÎŞRSSI -1
-						memset(ptNetSendData->Data+23, 0x01, 1);						  // ¼¯ÖĞÆ÷×´Ì¬×Ö
+						ptNetSendData->Data[22] = (ptNetSendData->Data[22]+15-1);		  // DataLenï¼Œæ— RSSI -1
+						memset(ptNetSendData->Data+23, 0x01, 1);						  // é›†ä¸­å™¨çŠ¶æ€å­—
 						memset(ptNetSendData->Data+24, 0x00, 1);						  // 
-						memcpy(ptNetSendData->Data+25, (uint8_t *)&MeterTotal, 2);		  // ÉÏ±¨±í¾ß×ÜÊıÁ¿
-						memcpy(ptNetSendData->Data+27, ptNetCur->Data+6, 4);			  // ±í¾ß±àºÅ£¬DstAddr
+						memcpy(ptNetSendData->Data+25, (uint8_t *)&MeterTotal, 2);		  // ä¸ŠæŠ¥è¡¨å…·æ€»æ•°é‡
+						memcpy(ptNetSendData->Data+27, ptNetCur->Data+6, 4);			  // è¡¨å…·ç¼–å·ï¼ŒDstAddr
 						memcpy(ptNetSendData->Data+31, (uint8_t *)&tSystemTime, 7); 	  // report time
 						memcpy(ptNetSendData->Data+38, ptNetCur->Data+11, MeterDataLen);  // data
-						memset(ptNetSendData->Data+MeterDataLen+40, 0x16, 1);			  // end£¬2bytes crc reserved
+						memset(ptNetSendData->Data+MeterDataLen+40, 0x16, 1);			  // endï¼Œ2bytes crc reserved
 						ptNetSendData->Len = MeterDataLen + 41;
 						break;
 						
@@ -93,7 +93,7 @@ void GPRSPutProcess(void)
 						memcpy(ptNetSendData->Data+23, ptNetCur->Data, 2);			  // 2 bytes FuncCode
 						k = FindMeterID(ptNetCur->Data+6);
 						memcpy(ptNetSendData->Data+25, (uint8_t *)&k, 2);			  // 2 bytes meter node
-						memset(ptNetSendData->Data+29, 0x16, 1);			  		  // end£¬2bytes crc reserved before
+						memset(ptNetSendData->Data+29, 0x16, 1);			  		  // endï¼Œ2bytes crc reserved before
 						ptNetSendData->Len = 30;									  // send length
 						break;
 						
@@ -104,7 +104,7 @@ void GPRSPutProcess(void)
 						memcpy(ptNetSendData->Data+32, ConParm.ReportBaseTime, 3);		  // report base time
 						memcpy(ptNetSendData->Data+35, ptNetCur->Data+11, MeterDataLen);  // Data
 						memset(ptNetSendData->Data+MeterDataLen+35, ConRssi, 1);		  // 1 bytes CON RSSI
-						memset(ptNetSendData->Data+MeterDataLen+38, 0x16, 1);			  // end£¬2bytes crc reserved before
+						memset(ptNetSendData->Data+MeterDataLen+38, 0x16, 1);			  // endï¼Œ2bytes crc reserved before
 						ptNetSendData->Len = MeterDataLen + 39;							  // send length
 						break;
 					
@@ -129,7 +129,7 @@ void GPRSPutProcess(void)
 						ptNetSendData->Data[22] += 2;									  // DataLen+FuncCode
 						memcpy(ptNetSendData->Data+23, ptNetCur->Data, 2);				  // 2 bytes FuncCode
 						memcpy(ptNetSendData->Data+25, ptNetCur->Data+11, MeterDataLen);  // Data
-						memset(ptNetSendData->Data+MeterDataLen+27, 0x16, 1);			  // end£¬2bytes crc reserved before
+						memset(ptNetSendData->Data+MeterDataLen+27, 0x16, 1);			  // endï¼Œ2bytes crc reserved before
 						ptNetSendData->Len = MeterDataLen + 28;							  // send length
 						break;
 					
@@ -140,12 +140,12 @@ void GPRSPutProcess(void)
 						break;
 				}
 			}
-			else  /* 2603³¬Ê± */
+			else  /* 2603è¶…æ—¶ */
 			{
 				ptNetSendData->Data[22] = 2;			  // DataLen
 				memset(ptNetSendData->Data+23, 0x03, 1);  // 2 bytes response code
 				memset(ptNetSendData->Data+24, 0x26, 1);  // 
-				memset(ptNetSendData->Data+27, 0x16, 1);  // end£¬2bytes crc reserved before
+				memset(ptNetSendData->Data+27, 0x16, 1);  // endï¼Œ2bytes crc reserved before
 				ptNetSendData->Len = 28;				  // send length
 				ptNetCur->TaskState = TASK_RUNNING;
 				GPRSPutFlag = 1;
@@ -159,7 +159,7 @@ void GPRSPutProcess(void)
 				if ((GET_TICK_COUNT() - SendTimeoutTimer) > TICK_RATE_MS(GPRS_REPORT_TIME))
 				{
 					GPRSReportSendNum++;
-					if (GPRSReportSendNum >= 2)  /* GPRS±¨¸æÖØ·¢µ½2´Î */
+					if (GPRSReportSendNum >= 2)  /* GPRSæŠ¥å‘Šé‡å‘åˆ°2æ¬¡ */
 					{
 						GPRSReportSendNum = 0;
 						ptNetCur->ProcTime++;
@@ -172,7 +172,7 @@ void GPRSPutProcess(void)
 							ptNetCur->TaskState = TASK_SUSPEND;
 						}
 					}
-					else  /* ÖØ·¢GPRS±¨¸æ */
+					else  /* é‡å‘GPRSæŠ¥å‘Š */
 					{
 						GPRSPutFlag = 1;
 					}
@@ -212,7 +212,7 @@ void GPRSPutProcess(void)
 	}
 }
 
-/* ½«GPRSÍøÂçÊÕµ½µÄÊı×é»º´æµ½ÉäÆµ´¦ÀíÊı×éÖĞ */
+/* å°†GPRSç½‘ç»œæ”¶åˆ°çš„æ•°ç»„ç¼“å­˜åˆ°å°„é¢‘å¤„ç†æ•°ç»„ä¸­ */
 void GPRSGetProcess(void)
 {
 	uint8_t i;
@@ -228,17 +228,17 @@ void GPRSGetProcess(void)
 	
 	if (GPRSGetFlag == 1)
 	{
-		NetRecvData(GPRS, GPRSRecvBuffer, (uint8_t*)&GPRSRecvSize);  /* »ñÈ¡GPRS½ÓÊÕÊı¾İ */
+		NetRecvData(GPRS, GPRSRecvBuffer, (uint8_t*)&GPRSRecvSize);  /* è·å–GPRSæ¥æ”¶æ•°æ® */
 		
 		ptNetHead = (PT_NetHead)GPRSRecvBuffer;
 		if ((ptNetHead->FuncCode==0x3004) || (ptNetHead->FuncCode==0x5004) || (ptNetHead->FuncCode==0x5005) || (ptNetHead->FuncCode==0x5007) || (ptNetHead->FuncCode==0x5009))
 		{
-			if (ptNetHead->FuncCode == 0x5004)  /* °´¼Û¸ñÀà±ğ±£´æÊµÊ±µ÷¼ÛÊı¾İ */
+			if (ptNetHead->FuncCode == 0x5004)  /* æŒ‰ä»·æ ¼ç±»åˆ«ä¿å­˜å®æ—¶è°ƒä»·æ•°æ® */
 			{
 				memcpy(tRealPrice.Data, GPRSRecvBuffer+23, 14);
 				MemoryBufferWrite(MRAM, (uint8_t *)&tRealPrice, REAL_PRICE_ADDR + sizeof(T_RealPrice)*GPRSRecvBuffer[23], sizeof(T_RealPrice));
 			}
-			else if (ptNetHead->FuncCode == 0x5005)  /* °´¼Û¸ñÀà±ğ±£´æÔ¤µ÷¼ÛÊı¾İ */
+			else if (ptNetHead->FuncCode == 0x5005)  /* æŒ‰ä»·æ ¼ç±»åˆ«ä¿å­˜é¢„è°ƒä»·æ•°æ® */
 			{
 				memcpy(tPresetPrice.Data, GPRSRecvBuffer+23, 15);
 				MemoryBufferWrite(MRAM, (uint8_t *)&tPresetPrice, PRESET_PRICE_ADDR + sizeof(T_PresetPrice)*GPRSRecvBuffer[23], sizeof(T_PresetPrice));
@@ -249,7 +249,7 @@ void GPRSGetProcess(void)
 				for (k = 0; k < METER_SUM; k++)
 				{
 					MemoryBufferRead(MRAM, (uint8_t *)&tESTask, ESTASK_ADDR + sizeof(T_ESTASK)*k, sizeof(T_ESTASK));
-					if (tESTask.PriceCalss == GPRSRecvBuffer[23])  /* ¼Û¸ñÀà±ğ */
+					if (tESTask.PriceCalss == GPRSRecvBuffer[23])  /* ä»·æ ¼ç±»åˆ« */
 					{
 						tESTask.Sign |= 0x02;
 						memcpy(tESTask.RPID, ptNetHead->DataPacketID, 2);
@@ -262,7 +262,7 @@ void GPRSGetProcess(void)
 				for (k = 0; k < METER_SUM; k++)
 				{
 					MemoryBufferRead(MRAM, (uint8_t *)&tESTask, ESTASK_ADDR + sizeof(T_ESTASK)*k, sizeof(T_ESTASK));
-					if (tESTask.PriceCalss == GPRSRecvBuffer[23])  /* ¼Û¸ñÀà±ğ */
+					if (tESTask.PriceCalss == GPRSRecvBuffer[23])  /* ä»·æ ¼ç±»åˆ« */
 					{
 						tESTask.Sign |= 0x10;
 						memcpy(tESTask.PPID, ptNetHead->DataPacketID, 2);
@@ -278,20 +278,20 @@ void GPRSGetProcess(void)
 					if (ptNetHead->FuncCode == 0x3004)
 					{
 						tESTask.Sign |= 0x01;
-						tESTask.PriceCalss = GPRSRecvBuffer[23];  /* ±£´æµ¥±í¼Û¸ñÀà±ğ */
+						tESTask.PriceCalss = GPRSRecvBuffer[23];  /* ä¿å­˜å•è¡¨ä»·æ ¼ç±»åˆ« */
 						memcpy(tESTask.OGID, ptNetHead->DataPacketID, 2);
 						memcpy(&tESTask.OpenGas, GPRSRecvBuffer+23, 28);
 					}
 					else if (ptNetHead->FuncCode == 0x5004)
 					{
 						tESTask.Sign |= 0x02;
-						tESTask.PriceCalss = GPRSRecvBuffer[23];  /* ±£´æµ¥±í¼Û¸ñÀà±ğ */
+						tESTask.PriceCalss = GPRSRecvBuffer[23];  /* ä¿å­˜å•è¡¨ä»·æ ¼ç±»åˆ« */
 						memcpy(tESTask.RPID, ptNetHead->DataPacketID, 2);
 					}
 					else if (ptNetHead->FuncCode == 0x5005)
 					{
 						tESTask.Sign |= 0x10;
-						tESTask.PriceCalss = GPRSRecvBuffer[23];  /* ±£´æµ¥±í¼Û¸ñÀà±ğ */
+						tESTask.PriceCalss = GPRSRecvBuffer[23];  /* ä¿å­˜å•è¡¨ä»·æ ¼ç±»åˆ« */
 						memcpy(tESTask.PPID, ptNetHead->DataPacketID, 2);
 					}
 					else if (ptNetHead->FuncCode == 0x5007)
@@ -326,8 +326,8 @@ void GPRSGetProcess(void)
 						return;
 					}
 					memcpy(ptRadioNew->Data, GPRSRecvBuffer, GPRSRecvSize);		// RadioData
-					memcpy(&ptRadioNew->DataPacketID, GPRSRecvBuffer+18, 2);	// Êı¾İ°üID
-					memcpy(ptRadioNew->DstAddr, GPRSRecvBuffer+6, 4);			// Ä¿±ê£¨±í¾ß£©µØÖ·
+					memcpy(&ptRadioNew->DataPacketID, GPRSRecvBuffer+18, 2);	// æ•°æ®åŒ…ID
+					memcpy(ptRadioNew->DstAddr, GPRSRecvBuffer+6, 4);			// ç›®æ ‡ï¼ˆè¡¨å…·ï¼‰åœ°å€
 					memcpy(&ptRadioNew->ID, GPRSRecvBuffer+1, 2);				// ID(FuncCode)
 					ptRadioNew->Src       = AT_NET;
 					ptRadioNew->Dest      = AT_RADIO;
@@ -340,7 +340,7 @@ void GPRSGetProcess(void)
 				}
 			}
 			
-			/* ÈÎÎñÂú£¬·µ»Øbusy errorµ½ÖĞĞÄ */
+			/* ä»»åŠ¡æ»¡ï¼Œè¿”å›busy erroråˆ°ä¸­å¿ƒ */
 			if (i == TASK_SIZE)
 			{
 				memcpy(ptNetSendData->Data, GPRSRecvBuffer, 23);	// net head
@@ -417,7 +417,7 @@ int NetConnect(char *pcName)
 }
 
 
-// ´ÓÍøÂçÉè±¸pcName·¢ËÍÊı¾İ°ü
+// ä»ç½‘ç»œè®¾å¤‡pcNameå‘é€æ•°æ®åŒ…
 void NetSendPacket(char *pcName, uint8_t *buffer, uint8_t size)
 {
 	PT_NetDriver ptTmp = g_ptNetDriverHead;
@@ -433,7 +433,7 @@ void NetSendPacket(char *pcName, uint8_t *buffer, uint8_t size)
 }
 
 
-// ´ÓÍøÂçÉè±¸pcName½ÓÊÕÊı¾İ°ü
+// ä»ç½‘ç»œè®¾å¤‡pcNameæ¥æ”¶æ•°æ®åŒ…
 uint8_t NetRecvData(char *pcName, uint8_t *data, uint8_t *size)
 {
 	uint8_t iError = 0;
@@ -452,7 +452,7 @@ uint8_t NetRecvData(char *pcName, uint8_t *data, uint8_t *size)
 }
 
 
-// ×¢²áPT_NetDriver½á¹¹Ìå
+// æ³¨å†ŒPT_NetDriverç»“æ„ä½“
 int RegisterNetDriver(PT_NetDriver ptNetDriver)
 {
 	PT_NetDriver ptTmp;
@@ -477,7 +477,7 @@ int RegisterNetDriver(PT_NetDriver ptNetDriver)
 }
 
 
-// ×¢²áËùÓĞµÄÍøÂç±¸½á¹¹Ìå
+// æ³¨å†Œæ‰€æœ‰çš„ç½‘ç»œå¤‡ç»“æ„ä½“
 void NetRegister(void)
 {
 	int iError;
@@ -488,7 +488,7 @@ void NetRegister(void)
 }
 
 
-// ³õÊ¼»¯ËùÓĞµÄÍøÂçÉè±¸
+// åˆå§‹åŒ–æ‰€æœ‰çš„ç½‘ç»œè®¾å¤‡
 void NetDeviceInit(void)
 {
 	PT_NetDriver ptTmp = g_ptNetDriverHead;
@@ -501,7 +501,7 @@ void NetDeviceInit(void)
 }
 
 
-/* CRC×Ö½ÚĞ£Ñé */
+/* CRCå­—èŠ‚æ ¡éªŒ */
 uint16_t ComputeCrc(uint16_t crc, uint8_t dataByte, uint16_t polynomial)
 {
 	uint8_t i = 0;
@@ -525,7 +525,7 @@ uint16_t ComputeCrc(uint16_t crc, uint8_t dataByte, uint16_t polynomial)
 }
 
 
-/* Éú³ÉÍøÂçÊı×éCRCĞ£Ñé */
+/* ç”Ÿæˆç½‘ç»œæ•°ç»„CRCæ ¡éªŒ */
 void NetComputeCRC(uint8_t *buffer, uint8_t length, uint8_t *pcrc)
 {
 	uint8_t i = 0;
@@ -545,7 +545,7 @@ void NetComputeCRC(uint8_t *buffer, uint8_t length, uint8_t *pcrc)
 }
 
 
-/* Ğ£ÑéÍøÂçÊı×éCRC */
+/* æ ¡éªŒç½‘ç»œæ•°ç»„CRC */
 bool NetCheckCRC(uint8_t *buffer, uint8_t length, uint16_t *pcrc)
 {
 	uint8_t i = 0;
@@ -569,7 +569,7 @@ bool NetCheckCRC(uint8_t *buffer, uint8_t length, uint16_t *pcrc)
 	}
 }
 
-/* ÍøÂçÊı¾İÕıÈ·ĞÔĞ£Ñé */
+/* ç½‘ç»œæ•°æ®æ­£ç¡®æ€§æ ¡éªŒ */
 bool NetDataCheck(uint8_t *buffer, uint8_t len)
 {
 	if (buffer[0]!=0x68 || buffer[len-1]!=0x16)

@@ -40,13 +40,13 @@ void MRAMBufferReset(void)
 	memcpy(ConParm.ID, ID, 4);
 	ConParm.RFChannel = RFChannel;
 	ConParm.GPRSHeartTime = 30000;
-	/* °Ñ±í¾ßµØÖ·´æ´¢ÇøÉèÖÃÎª0xFF */
+	/* æŠŠè¡¨å…·åœ°å€å­˜å‚¨åŒºè®¾ç½®ä¸º0xFF */
 	for (k = 0; k < 4*METER_SUM; k++)
 	{
 		*p_extram++ = (uint8_t)0xFF;
 	}
-	MemoryBufferWrite(MRAM, (uint8_t *)&ConParm, CON_PARM_ADDR, sizeof(T_ConParm));    /* Ğ´Èë¼¯ÖĞÆ÷²ÎÊı */
-	MemoryBufferWrite(MRAM, (uint8_t *)&CentreSocket, SOCKET_ADDR, sizeof(T_Socket));  /* Ğ´ÈëIP²ÎÊı */
+	MemoryBufferWrite(MRAM, (uint8_t *)&ConParm, CON_PARM_ADDR, sizeof(T_ConParm));    /* å†™å…¥é›†ä¸­å™¨å‚æ•° */
+	MemoryBufferWrite(MRAM, (uint8_t *)&CentreSocket, SOCKET_ADDR, sizeof(T_Socket));  /* å†™å…¥IPå‚æ•° */
 }
 
 

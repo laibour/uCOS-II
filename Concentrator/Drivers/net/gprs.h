@@ -4,7 +4,7 @@
 
 #define	GPRS_BUFFER_SIZE		(255)		/* GPRS buffer size */
 
-/* GPRS�˿ڳ�ʼ�� */
+/* GPRS¶Ë¿Ú³õÊ¼»¯ */
 // GPRS POWER PORT
 #define	GPRS_POWER_RCC			RCC_APB2Periph_GPIOG
 #define	GPRS_POWER_PIN			GPIO_Pin_6

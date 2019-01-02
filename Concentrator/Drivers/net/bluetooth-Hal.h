@@ -2,7 +2,7 @@
 #define __BLUETOOTH_HAL_H
 
 
-/* BLUETOOTH��Դ���ƶ˿� */
+/* BLUETOOTHµçÔ´¿ØÖÆ¶Ë¿Ú */
 #define	BLUETOOTH_POWER_RCC		RCC_APB2Periph_GPIOC
 #define	BLUETOOTH_POWER_PIN		GPIO_Pin_0
 #define	BLUETOOTH_POWER_GPIO	GPIOC

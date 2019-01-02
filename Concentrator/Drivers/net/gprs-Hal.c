@@ -5,8 +5,8 @@
 
 void USART2_Init(void)
 {
-	DMA_InitTypeDef  DMA_InitStruct;		// ¶¨ÒåDMA½á¹¹Ìå
-	NVIC_InitTypeDef  NVIC_InitStruct;		// ¶¨ÒåNVIC³õÊ¼»¯½á¹¹Ìå
+	DMA_InitTypeDef  DMA_InitStruct;		// å®šä¹‰DMAç»“æž„ä½“
+	NVIC_InitTypeDef  NVIC_InitStruct;		// å®šä¹‰NVICåˆå§‹åŒ–ç»“æž„ä½“
 	GPIO_InitTypeDef  GPIO_InitStructure;
 	USART_InitTypeDef USART_InitStructure;
 	
@@ -14,7 +14,7 @@ void USART2_Init(void)
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO, ENABLE);
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
 
-	/* USART2¶Ë¿ÚÅäÖÃ£¬PD5 TX ¸´ÓÃÍÆÍìÊä³¡¡¢PD6 RX ¸¡¿ÕÊäÈëÄ£Ê½ */
+	/* USART2ç«¯å£é…ç½®ï¼ŒPD5 TX å¤ç”¨æŽ¨æŒ½è¾“åœºã€PD6 RX æµ®ç©ºè¾“å…¥æ¨¡å¼ */
 	//GPIO_PinRemapConfig(GPIO_Remap_USART2, ENABLE);
 
 	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_2;
@@ -26,7 +26,7 @@ void USART2_Init(void)
 	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN_FLOATING;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
     
-    /* USART2ÅäÖÃ */
+    /* USART2é…ç½® */
 	USART_InitStructure.USART_BaudRate = 115200;
 	USART_InitStructure.USART_WordLength = USART_WordLength_8b;
 	USART_InitStructure.USART_StopBits = USART_StopBits_1;
@@ -35,39 +35,39 @@ void USART2_Init(void)
 	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
 	USART_Init(USART2, &USART_InitStructure);
 	
-	/* ´®¿ÚÖÐ¶ÏÊ¹ÄÜ */
+	/* ä¸²å£ä¸­æ–­ä½¿èƒ½ */
 	NVIC_InitStruct.NVIC_IRQChannel = USART2_IRQn;
 	NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 2;
 	NVIC_InitStruct.NVIC_IRQChannelSubPriority = 1;
 	NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStruct);
 	
-	// DMAÉèÖÃ
-	DMA_DeInit(DMA1_Channel6);									/* USART2µÄRXÓëDMA1_Channel6ÏàÁ¬ */
-	DMA_InitStruct.DMA_PeripheralBaseAddr = (u32)(&USART2->DR);	/* DMAÍâÉè»ùµØÖ· */
-	DMA_InitStruct.DMA_MemoryBaseAddr = (u32)GPRSRecvBuffer;		/* ÄÚ´æ»ùµØÖ· */
-	DMA_InitStruct.DMA_DIR = DMA_DIR_PeripheralSRC;				/* Êý¾Ý´«Êä·½Ïò(´ÓÍâÉè¶Á)£¬DMA_DIR_PeripheralDST:ÍâÉè×÷ÎªÊý¾Ý´«ÊäµÄÄ¿µÄµØ,DMA_DIR_PeripheralSRC:ÍâÉè×÷ÎªÊý¾Ý´«ÊäµÄÀ´Ô´ */
-	DMA_InitStruct.DMA_BufferSize = GPRS_BUFFER_SIZE;				/* ¶¨ÒåÖ¸¶¨DMAÍ¨µÀµÄDMA»º´æµÄ´óÐ¡£¬ÉèÖÃ³ÉÃ¿Ò»´ÎÑ­»·ÖÐÐèÒª´«ÊäµÄÊý¾Ý¸öÊý¡£Í¨³£ºÍÊý×é´óÐ¡ÉèÖÃ³ÉÏàÍ¬¡£ */
-	DMA_InitStruct.DMA_PeripheralInc = DMA_PeripheralInc_Disable;	/* ½ûÖ¹ÍâÉèµØÖ·¼Ä´æÆ÷µÝÔö */
-	DMA_InitStruct.DMA_MemoryInc = DMA_MemoryInc_Enable;			/* Ê¹ÄÜÄÚ´æµØÖ·¼Ä´æÆ÷µÝÔö */
-	DMA_InitStruct.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;	/* Éè¶¨ÍâÉèÊý¾Ý¿í¶È(8Î») */
-	DMA_InitStruct.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;	/* Éè¶¨ÄÚ´æÊý¾Ý¿í¶È(8Î») */
-	DMA_InitStruct.DMA_Mode = DMA_Mode_Normal;			/* DMA_Mode_Normal:Õý³£»º´æÄ£Ê½£¬DMA_Mode_Circular:Ñ­»·»º´æÄ£Ê½ */
-	DMA_InitStruct.DMA_Priority = DMA_Priority_High;	/* Éè¶¨DMAÍ¨µÀxµÄÈí¼þÓÅÏÈ¼¶±ð */
-	DMA_InitStruct.DMA_M2M = DMA_M2M_Disable;			/* ½ûÖ¹DMAÍ¨µÀµÄÄÚ´æµ½ÄÚ´æ´«Êä */
-	DMA_Init(DMA1_Channel6, &DMA_InitStruct);			/* ¸ù¾ÝDMA_InitStructÖÐÖ¸¶¨µÄ²ÎÊý³õÊ¼»¯DMA_channel6 */
+	// DMAè®¾ç½®
+	DMA_DeInit(DMA1_Channel6);									/* USART2çš„RXä¸ŽDMA1_Channel6ç›¸è¿ž */
+	DMA_InitStruct.DMA_PeripheralBaseAddr = (u32)(&USART2->DR);	/* DMAå¤–è®¾åŸºåœ°å€ */
+	DMA_InitStruct.DMA_MemoryBaseAddr = (u32)GPRSRecvBuffer;		/* å†…å­˜åŸºåœ°å€ */
+	DMA_InitStruct.DMA_DIR = DMA_DIR_PeripheralSRC;				/* æ•°æ®ä¼ è¾“æ–¹å‘(ä»Žå¤–è®¾è¯»)ï¼ŒDMA_DIR_PeripheralDST:å¤–è®¾ä½œä¸ºæ•°æ®ä¼ è¾“çš„ç›®çš„åœ°,DMA_DIR_PeripheralSRC:å¤–è®¾ä½œä¸ºæ•°æ®ä¼ è¾“çš„æ¥æº */
+	DMA_InitStruct.DMA_BufferSize = GPRS_BUFFER_SIZE;				/* å®šä¹‰æŒ‡å®šDMAé€šé“çš„DMAç¼“å­˜çš„å¤§å°ï¼Œè®¾ç½®æˆæ¯ä¸€æ¬¡å¾ªçŽ¯ä¸­éœ€è¦ä¼ è¾“çš„æ•°æ®ä¸ªæ•°ã€‚é€šå¸¸å’Œæ•°ç»„å¤§å°è®¾ç½®æˆç›¸åŒã€‚ */
+	DMA_InitStruct.DMA_PeripheralInc = DMA_PeripheralInc_Disable;	/* ç¦æ­¢å¤–è®¾åœ°å€å¯„å­˜å™¨é€’å¢ž */
+	DMA_InitStruct.DMA_MemoryInc = DMA_MemoryInc_Enable;			/* ä½¿èƒ½å†…å­˜åœ°å€å¯„å­˜å™¨é€’å¢ž */
+	DMA_InitStruct.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;	/* è®¾å®šå¤–è®¾æ•°æ®å®½åº¦(8ä½) */
+	DMA_InitStruct.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;	/* è®¾å®šå†…å­˜æ•°æ®å®½åº¦(8ä½) */
+	DMA_InitStruct.DMA_Mode = DMA_Mode_Normal;			/* DMA_Mode_Normal:æ­£å¸¸ç¼“å­˜æ¨¡å¼ï¼ŒDMA_Mode_Circular:å¾ªçŽ¯ç¼“å­˜æ¨¡å¼ */
+	DMA_InitStruct.DMA_Priority = DMA_Priority_High;	/* è®¾å®šDMAé€šé“xçš„è½¯ä»¶ä¼˜å…ˆçº§åˆ« */
+	DMA_InitStruct.DMA_M2M = DMA_M2M_Disable;			/* ç¦æ­¢DMAé€šé“çš„å†…å­˜åˆ°å†…å­˜ä¼ è¾“ */
+	DMA_Init(DMA1_Channel6, &DMA_InitStruct);			/* æ ¹æ®DMA_InitStructä¸­æŒ‡å®šçš„å‚æ•°åˆå§‹åŒ–DMA_channel6 */
 	
 	DMA_Cmd(DMA1_Channel6, ENABLE);
-	USART_DMACmd(USART2, USART_DMAReq_Rx, ENABLE);		/* Ê¹ÄÜUSART2½ÓÊÕµÄDMAÇëÇóÓ³Ïñ */
+	USART_DMACmd(USART2, USART_DMAReq_Rx, ENABLE);		/* ä½¿èƒ½USART2æŽ¥æ”¶çš„DMAè¯·æ±‚æ˜ åƒ */
 	
-	USART_Cmd(USART2, ENABLE);							/* Ê¹ÄÜ´®¿Ú */
-	USART_ITConfig(USART2, USART_IT_IDLE, ENABLE);		/* Ê¹ÄÜ´®¿Ú×ÜÏß¿ÕÏÐÖÐ¶Ï */
+	USART_Cmd(USART2, ENABLE);							/* ä½¿èƒ½ä¸²å£ */
+	USART_ITConfig(USART2, USART_IT_IDLE, ENABLE);		/* ä½¿èƒ½ä¸²å£æ€»çº¿ç©ºé—²ä¸­æ–­ */
 	
 //	DMA_ITConfig(DMA1_Channel6, DMA_IT_TC, ENABLE);
 //	USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
 }
 
-/* USART2 ·¢ËÍÒ»¸ö×Ö·û´® */
+/* USART2 å‘é€ä¸€ä¸ªå­—ç¬¦ä¸² */
 void USART2_SendString(uint8_t *ch)
 {
 	while(*ch != 0)
@@ -78,7 +78,7 @@ void USART2_SendString(uint8_t *ch)
 	}
 }
 
-/* USART2 ·¢ËÍÖ¸¶¨¸öÊýµÄÊý¾Ý */
+/* USART2 å‘é€æŒ‡å®šä¸ªæ•°çš„æ•°æ® */
 void USART2_SendData(uint8_t *chr, uint8_t num)
 {
 	while(num != 0)

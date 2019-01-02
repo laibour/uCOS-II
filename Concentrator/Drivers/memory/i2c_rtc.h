@@ -6,7 +6,7 @@
 
 
 #pragma pack(1)
-typedef struct _RTCTime	// ����ϵͳʱ�ӽṹ��
+typedef struct _RTCTime	// 定义系统时钟结构体
 {
    uint8_t second;
    uint8_t minute;

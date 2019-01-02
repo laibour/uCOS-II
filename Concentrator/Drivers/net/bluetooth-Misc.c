@@ -11,7 +11,7 @@ uint8_t BluetoothCfg(void)
 	uint8_t BluetoothInitData[][13] =
 	{
 		"AT",
-        "AT+BAUD4",		// ²¨ÌØÂÊ
+        "AT+BAUD4",		// Â²Â¨ÃŒÃ˜Ã‚ÃŠ
         "AT+NAMEST-06",	// name
 		"AT+PIN1234",	// pin
 	};

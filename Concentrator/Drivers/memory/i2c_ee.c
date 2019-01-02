@@ -161,7 +161,7 @@ void I2C_EE_BufferWrite(uint8_t* pBuffer, uint16_t WriteAddr, uint16_t NumByteTo
 
   if (NumByteToWrite == 0)
   {
-     return;	//Ôö¼ÓĞ´Èë¸öÊıÎª0¸öÊ±µÄ·µ»Ø
+     return;	//å¢åŠ å†™å…¥ä¸ªæ•°ä¸º0ä¸ªæ—¶çš„è¿”å›
   }
   Addr = WriteAddr % I2C_PageSize;
   count = I2C_PageSize - Addr;

@@ -148,7 +148,7 @@ bool GPRSPowerOn(void)
 		case GPRS_POWER_WAIT:
 			if ((GET_TICK_COUNT()-startTick) < TICK_RATE_MS(40000))	// wait 40s
 			{
-				if (GPRSRecvFlag == 1)	// 接收GPRS数据
+				if (GPRSRecvFlag == 1)	// 鎺ユ敹GPRS鏁版嵁
 				{
 					GPRSRecvFlag = 0;
 					DBG_PRINTF("%s \n", GPRSRecvBuffer);
@@ -337,7 +337,7 @@ uint8_t GPRSCfg(void)
 	return result;
 }
 
-/* 退出透传模式 */
+/* 閫�鍑洪�忎紶妯″紡 */
 bool GPRSExit(void)
 {
 	bool result = false;

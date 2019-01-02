@@ -2,7 +2,7 @@
 #define __BLUETOOTH_H
 
 
-#define	BLUE_BUFFER_SIZE		255		/* À¶ÑÀ½ÓÊÕ»º³åÇø´óĞ¡ */
+#define	BLUE_BUFFER_SIZE		255		/* è“ç‰™æ¥æ”¶ç¼“å†²åŒºå¤§å° */
 
 
 typedef enum

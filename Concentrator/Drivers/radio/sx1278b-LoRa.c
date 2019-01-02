@@ -179,29 +179,29 @@ void SX1278BLoRaInit( void )
 //	// Set the device in Sleep Mode
 //    SX1278BLoRaSetOpMode( RFLR_OPMODE_SLEEP );
 	
-    SX1278BLR->RegLna = RFLR_LNA_GAIN_G1;	// LNA��������
+    SX1278BLR->RegLna = RFLR_LNA_GAIN_G1;	// LNA增益设置
 
     SX1278BWriteBuffer( REG_LR_OPMODE, SX1278BRegs + 1, 0x70 - 1 );
 
     // set the RF settings 
-    SX1278BLoRaSetRFFrequency( BLoRaSettings.RFFrequency );         	// set frequency��RF�ز�Ƶ��
-    SX1278BLoRaSetSpreadingFactor( BLoRaSettings.SpreadingFactor ); 	// SF6 only operates in implicit header mode.��Ƶ����
-    SX1278BLoRaSetErrorCoding( BLoRaSettings.ErrorCoding );			// ����������
-    SX1278BLoRaSetPacketCrcOn( BLoRaSettings.CrcOn );					// ��CRCУ��
-    SX1278BLoRaSetSignalBandwidth( BLoRaSettings.SignalBw );			// �źŴ���
+    SX1278BLoRaSetRFFrequency( BLoRaSettings.RFFrequency );         	// set frequency，RF载波频率
+    SX1278BLoRaSetSpreadingFactor( BLoRaSettings.SpreadingFactor ); 	// SF6 only operates in implicit header mode.扩频因子
+    SX1278BLoRaSetErrorCoding( BLoRaSettings.ErrorCoding );			// 纠错编码率
+    SX1278BLoRaSetPacketCrcOn( BLoRaSettings.CrcOn );					// 打开CRC校验
+    SX1278BLoRaSetSignalBandwidth( BLoRaSettings.SignalBw );			// 信号带宽
 
-	SX1278BLoRaSetImplicitHeaderOn( BLoRaSettings.ImplicitHeaderOn );	// ��ʽ��ͷģʽ
-	SX1278BLoRaSetPreambleLength( BLoRaSettings.PreambleLength );		// ǰ���볤��
-	SX1278BLoRaSetSyncWord( BLoRaSettings.SyncWord );					// ͬ����
+	SX1278BLoRaSetImplicitHeaderOn( BLoRaSettings.ImplicitHeaderOn );	// 显式报头模式
+	SX1278BLoRaSetPreambleLength( BLoRaSettings.PreambleLength );		// 前导码长度
+	SX1278BLoRaSetSyncWord( BLoRaSettings.SyncWord );					// 同步字
 	
-    SX1278BLoRaSetSymbTimeout( 0x3FF );									// ��ʱʱ��
-    SX1278BLoRaSetPayloadLength( BLoRaSettings.PayloadLength );		// �����ֽڳ��ȣ���ʽ����ͷģʽ����Ҫ����
+    SX1278BLoRaSetSymbTimeout( 0x3FF );									// 超时时间
+    SX1278BLoRaSetPayloadLength( BLoRaSettings.PayloadLength );		// 负载字节长度，隐式报文头模式下需要设置
     SX1278BLoRaSetLowDatarateOptimize( true );
 	
     if( BLoRaSettings.RFFrequency > 380000000 )  // 380000000
     {
-        SX1278BLoRaSetPAOutput( RFLR_PACONFIG_PASELECT_PABOOST ); 		// ѡ�� PA_BOOST �ܽ�����ź�
-        SX1278BLoRaSetPa20dBm( true );  									// ����������
+        SX1278BLoRaSetPAOutput( RFLR_PACONFIG_PASELECT_PABOOST ); 		// 选择 PA_BOOST 管脚输出信号
+        SX1278BLoRaSetPa20dBm( true );  									// 最大输出功率
         BLoRaSettings.Power = 2;
         SX1278BLoRaSetRFPower( BLoRaSettings.Power );
     }
@@ -214,7 +214,7 @@ void SX1278BLoRaInit( void )
     }
 	
 	// Set the device in Standby Mode
-    SX1278BLoRaSetOpMode( RFLR_OPMODE_STANDBY );	// ����Ϊ����ģʽ
+    SX1278BLoRaSetOpMode( RFLR_OPMODE_STANDBY );	// 设置为待机模式
 }
 
 void SX1278BLoRaSetDefaults( void )
@@ -413,7 +413,7 @@ uint32_t SX1278BLoRaProcess( void )
             SX1278BLoRaSetOpMode( RFLR_OPMODE_RECEIVER );
         }
         
-        memset( RFBuffer, 0, ( size_t )RF_BUFFER_SIZE );	// ���RFBuffer
+        memset( RFBuffer, 0, ( size_t )RF_BUFFER_SIZE );	// 清空RFBuffer
 
         PacketTimeout = BLoRaSettings.RxPacketTimeout;
         RxTimeoutTimer = GET_TICK_COUNT( );
@@ -449,7 +449,7 @@ uint32_t SX1278BLoRaProcess( void )
 
         if( BLoRaSettings.RxSingleOn == true ) // Rx single mode
         {
-            if( ( GET_TICK_COUNT() - RxTimeoutTimer ) > PacketTimeout )   //�����Ƿ�ʱ
+            if( ( GET_TICK_COUNT() - RxTimeoutTimer ) > PacketTimeout )   //计算是否超时
             {
                 RFLRState = RFLR_STATE_RX_TIMEOUT;
             }
@@ -458,7 +458,7 @@ uint32_t SX1278BLoRaProcess( void )
 		
     case RFLR_STATE_RX_DONE:
         SX1278BRead( REG_LR_IRQFLAGS, &SX1278BLR->RegIrqFlags );
-        if( ( SX1278BLR->RegIrqFlags & RFLR_IRQFLAGS_PAYLOADCRCERROR ) == RFLR_IRQFLAGS_PAYLOADCRCERROR )	// CRCУ��
+        if( ( SX1278BLR->RegIrqFlags & RFLR_IRQFLAGS_PAYLOADCRCERROR ) == RFLR_IRQFLAGS_PAYLOADCRCERROR )	// CRC校验
         {
             SX1278BWrite(REG_LR_IRQFLAGS, RFLR_IRQFLAGS_PAYLOADCRCERROR);	// Clear Irq
             
@@ -517,7 +517,7 @@ uint32_t SX1278BLoRaProcess( void )
         if( BLoRaSettings.RxSingleOn == true ) // Rx single mode
         {
             SX1278BLR->RegFifoAddrPtr = SX1278BLR->RegFifoRxBaseAddr;       
-            SX1278BWrite( REG_LR_FIFOADDRPTR, SX1278BLR->RegFifoAddrPtr );	// ��ȡ��������
+            SX1278BWrite( REG_LR_FIFOADDRPTR, SX1278BLR->RegFifoAddrPtr );	// 读取接收数据
 
             if( BLoRaSettings.ImplicitHeaderOn == true )
             {
@@ -549,7 +549,7 @@ uint32_t SX1278BLoRaProcess( void )
                 SX1278BLR->RegFifoAddrPtr = SX1278BLR->RegFifoRxCurrentAddr;
                 SX1278BWrite( REG_LR_FIFOADDRPTR, SX1278BLR->RegFifoAddrPtr );
                 SX1278BReadFifo( RFBuffer, SX1278BLR->RegNbRxBytes );
-				DATA_PRINTF(RFBuffer, RxPacketSize);	// �����յ�������
+				DATA_PRINTF(RFBuffer, RxPacketSize);	// 侦测接收到的数据
 			}
         }
         

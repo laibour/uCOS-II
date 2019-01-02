@@ -9,7 +9,7 @@ uint8_t ComRecvSize = 0;
 uint8_t ComSendBuffer[COM_BUFFER_SIZE];
 uint8_t ComRecvBuffer[COM_BUFFER_SIZE];
 
-/* µ÷ÊÔ´òÓ¡Êä³ö */
+/* è°ƒè¯•æ‰“å°è¾“å‡º */
 void DataPrint(uint8_t *data, uint8_t len)
 {
   	uint8_t i;
@@ -21,8 +21,8 @@ void DataPrint(uint8_t *data, uint8_t len)
 	printf("\n");
 }
 
-/* USART4 ·¢ËÍÖ¸¶¨¸öÊýµÄÊý¾Ý
- * ³õÊ¼»¯ÖÐÐÄ¼¯ÖÐÆ÷ÅäÖÃ²ÎÊýÊ±Ê¹ÓÃ
+/* USART4 å‘é€æŒ‡å®šä¸ªæ•°çš„æ•°æ®
+ * åˆå§‹åŒ–ä¸­å¿ƒé›†ä¸­å™¨é…ç½®å‚æ•°æ—¶ä½¿ç”¨
  */
 void DebugSendData(uint8_t *chr, uint8_t num)
 {
@@ -35,7 +35,7 @@ void DebugSendData(uint8_t *chr, uint8_t num)
 	}
 }
 
-/* UART4ÖÐ¶Ï */
+/* UART4ä¸­æ–­ */
 void UART4_IRQHandler(void)
 {
 	uint8_t num;
@@ -47,23 +47,23 @@ void UART4_IRQHandler(void)
 		num = UART4->DR;
 		DMA_Cmd(DMA2_Channel3, DISABLE);
 		ComRecvSize = COM_BUFFER_SIZE - DMA_GetCurrDataCounter(DMA2_Channel3);
-		DMA2_Channel3->CNDTR = COM_BUFFER_SIZE;	/* ¶¨ÒåÖ¸¶¨DMAÍ¨µÀµÄ»º´æµÄ´óÐ¡ */
+		DMA2_Channel3->CNDTR = COM_BUFFER_SIZE;	/* å®šä¹‰æŒ‡å®šDMAé€šé“çš„ç¼“å­˜çš„å¤§å° */
 		DMA_Cmd(DMA2_Channel3, ENABLE);
 		ComRecvFlag = 1;
 	}
 }
 
 /****************************************************************************************************************
-** º¯ÊýÃû³Æ:	DebugInit
-** ¹¦ÄÜÃèÊö:	Debug/UART4 ³õÊ¼»¯ÅäÖÃ
-** ÊäÈë²ÎÊý:	ÎÞ
-** ·µ »Ø Öµ:	ÎÞ
-** ±¸    ×¢:	ÎÞ
+** å‡½æ•°åç§°:	DebugInit
+** åŠŸèƒ½æè¿°:	Debug/UART4 åˆå§‹åŒ–é…ç½®
+** è¾“å…¥å‚æ•°:	æ— 
+** è¿” å›ž å€¼:	æ— 
+** å¤‡    æ³¨:	æ— 
 ****************************************************************************************************************/
 void DebugInit(void)
 {
-	DMA_InitTypeDef   DMA_InitStruct;		// ¶¨ÒåDMA½á¹¹Ìå
-	NVIC_InitTypeDef  NVIC_InitStruct;		// ¶¨ÒåNVIC³õÊ¼»¯½á¹¹Ìå
+	DMA_InitTypeDef   DMA_InitStruct;		// å®šä¹‰DMAç»“æž„ä½“
+	NVIC_InitTypeDef  NVIC_InitStruct;		// å®šä¹‰NVICåˆå§‹åŒ–ç»“æž„ä½“
 	GPIO_InitTypeDef  GPIO_InitStructure;
 	USART_InitTypeDef USART_InitStructure;
 	
@@ -71,7 +71,7 @@ void DebugInit(void)
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC | RCC_APB2Periph_AFIO, ENABLE);
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_UART4, ENABLE);
 	
-	/* USART4¶Ë¿ÚÅäÖÃ */
+	/* USART4ç«¯å£é…ç½® */
 	GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_10;
 	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF_PP;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -81,7 +81,7 @@ void DebugInit(void)
 	GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN_FLOATING;
 	GPIO_Init(GPIOC, &GPIO_InitStructure);
 	
-    /* USART4 ÅäÖÃÄ£Ê½Îª 115200 8-N-1£¬ÖÐ¶Ï½ÓÊÕ */
+    /* USART4 é…ç½®æ¨¡å¼ä¸º 115200 8-N-1ï¼Œä¸­æ–­æŽ¥æ”¶ */
 	USART_InitStructure.USART_BaudRate = 115200;
 	USART_InitStructure.USART_WordLength = USART_WordLength_8b;
 	USART_InitStructure.USART_StopBits = USART_StopBits_1;
@@ -90,33 +90,33 @@ void DebugInit(void)
 	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
 	USART_Init(UART4, &USART_InitStructure);
 	
-	/* ´®¿ÚÖÐ¶ÏÊ¹ÄÜ */
+	/* ä¸²å£ä¸­æ–­ä½¿èƒ½ */
 	NVIC_InitStruct.NVIC_IRQChannel = UART4_IRQn;
 	NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 2;
 	NVIC_InitStruct.NVIC_IRQChannelSubPriority = 3;
 	NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStruct);
 	
-	// DMAÉèÖÃ
-	DMA_DeInit(DMA2_Channel3);										/* USART2µÄRXÓëDMA1_Channel6ÏàÁ¬ */
-	DMA_InitStruct.DMA_PeripheralBaseAddr = (u32)(&UART4->DR);		/* DMAÍâÉè»ùµØÖ· */
-	DMA_InitStruct.DMA_MemoryBaseAddr = (u32)ComRecvBuffer;			/* ÄÚ´æ»ùµØÖ· */
-	DMA_InitStruct.DMA_DIR = DMA_DIR_PeripheralSRC;					/* Êý¾Ý´«Êä·½Ïò(´ÓÍâÉè¶Á)£¬DMA_DIR_PeripheralDST:ÍâÉè×÷ÎªÊý¾Ý´«ÊäµÄÄ¿µÄµØ,DMA_DIR_PeripheralSRC:ÍâÉè×÷ÎªÊý¾Ý´«ÊäµÄÀ´Ô´ */
-	DMA_InitStruct.DMA_BufferSize = COM_BUFFER_SIZE;				/* ¶¨ÒåÖ¸¶¨DMAÍ¨µÀµÄDMA»º´æµÄ´óÐ¡£¬ÉèÖÃ³ÉÃ¿Ò»´ÎÑ­»·ÖÐÐèÒª´«ÊäµÄÊý¾Ý¸öÊý¡£Í¨³£ºÍÊý×é´óÐ¡ÉèÖÃ³ÉÏàÍ¬¡£ */
-	DMA_InitStruct.DMA_PeripheralInc = DMA_PeripheralInc_Disable;	/* ½ûÖ¹ÍâÉèµØÖ·¼Ä´æÆ÷µÝÔö */
-	DMA_InitStruct.DMA_MemoryInc = DMA_MemoryInc_Enable;			/* Ê¹ÄÜÄÚ´æµØÖ·¼Ä´æÆ÷µÝÔö */
-	DMA_InitStruct.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;	/* Éè¶¨ÍâÉèÊý¾Ý¿í¶È(8Î») */
-	DMA_InitStruct.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;	/* Éè¶¨ÄÚ´æÊý¾Ý¿í¶È(8Î») */
-	DMA_InitStruct.DMA_Mode = DMA_Mode_Normal;			/* DMA_Mode_Normal:Õý³£»º´æÄ£Ê½£¬DMA_Mode_Circular:Ñ­»·»º´æÄ£Ê½ */
-	DMA_InitStruct.DMA_Priority = DMA_Priority_High;	/* Éè¶¨DMAÍ¨µÀxµÄÈí¼þÓÅÏÈ¼¶±ð */
-	DMA_InitStruct.DMA_M2M = DMA_M2M_Disable;			/* ½ûÖ¹DMAÍ¨µÀµÄÄÚ´æµ½ÄÚ´æ´«Êä */
-	DMA_Init(DMA2_Channel3, &DMA_InitStruct);			/* ¸ù¾ÝDMA_InitStructÖÐÖ¸¶¨µÄ²ÎÊý³õÊ¼»¯DMA_channel6 */
+	// DMAè®¾ç½®
+	DMA_DeInit(DMA2_Channel3);										/* USART2çš„RXä¸ŽDMA1_Channel6ç›¸è¿ž */
+	DMA_InitStruct.DMA_PeripheralBaseAddr = (u32)(&UART4->DR);		/* DMAå¤–è®¾åŸºåœ°å€ */
+	DMA_InitStruct.DMA_MemoryBaseAddr = (u32)ComRecvBuffer;			/* å†…å­˜åŸºåœ°å€ */
+	DMA_InitStruct.DMA_DIR = DMA_DIR_PeripheralSRC;					/* æ•°æ®ä¼ è¾“æ–¹å‘(ä»Žå¤–è®¾è¯»)ï¼ŒDMA_DIR_PeripheralDST:å¤–è®¾ä½œä¸ºæ•°æ®ä¼ è¾“çš„ç›®çš„åœ°,DMA_DIR_PeripheralSRC:å¤–è®¾ä½œä¸ºæ•°æ®ä¼ è¾“çš„æ¥æº */
+	DMA_InitStruct.DMA_BufferSize = COM_BUFFER_SIZE;				/* å®šä¹‰æŒ‡å®šDMAé€šé“çš„DMAç¼“å­˜çš„å¤§å°ï¼Œè®¾ç½®æˆæ¯ä¸€æ¬¡å¾ªçŽ¯ä¸­éœ€è¦ä¼ è¾“çš„æ•°æ®ä¸ªæ•°ã€‚é€šå¸¸å’Œæ•°ç»„å¤§å°è®¾ç½®æˆç›¸åŒã€‚ */
+	DMA_InitStruct.DMA_PeripheralInc = DMA_PeripheralInc_Disable;	/* ç¦æ­¢å¤–è®¾åœ°å€å¯„å­˜å™¨é€’å¢ž */
+	DMA_InitStruct.DMA_MemoryInc = DMA_MemoryInc_Enable;			/* ä½¿èƒ½å†…å­˜åœ°å€å¯„å­˜å™¨é€’å¢ž */
+	DMA_InitStruct.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;	/* è®¾å®šå¤–è®¾æ•°æ®å®½åº¦(8ä½) */
+	DMA_InitStruct.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;	/* è®¾å®šå†…å­˜æ•°æ®å®½åº¦(8ä½) */
+	DMA_InitStruct.DMA_Mode = DMA_Mode_Normal;			/* DMA_Mode_Normal:æ­£å¸¸ç¼“å­˜æ¨¡å¼ï¼ŒDMA_Mode_Circular:å¾ªçŽ¯ç¼“å­˜æ¨¡å¼ */
+	DMA_InitStruct.DMA_Priority = DMA_Priority_High;	/* è®¾å®šDMAé€šé“xçš„è½¯ä»¶ä¼˜å…ˆçº§åˆ« */
+	DMA_InitStruct.DMA_M2M = DMA_M2M_Disable;			/* ç¦æ­¢DMAé€šé“çš„å†…å­˜åˆ°å†…å­˜ä¼ è¾“ */
+	DMA_Init(DMA2_Channel3, &DMA_InitStruct);			/* æ ¹æ®DMA_InitStructä¸­æŒ‡å®šçš„å‚æ•°åˆå§‹åŒ–DMA_channel6 */
 	
 	DMA_Cmd(DMA2_Channel3, ENABLE);
-	USART_DMACmd(UART4, USART_DMAReq_Rx, ENABLE);		/* Ê¹ÄÜUART4½ÓÊÕµÄDMAÇëÇóÓ³Ïñ */
+	USART_DMACmd(UART4, USART_DMAReq_Rx, ENABLE);		/* ä½¿èƒ½UART4æŽ¥æ”¶çš„DMAè¯·æ±‚æ˜ åƒ */
 	
-	USART_Cmd(UART4, ENABLE);							/* Ê¹ÄÜ´®¿Ú */
-	USART_ITConfig(UART4, USART_IT_IDLE, ENABLE);		/* Ê¹ÄÜ´®¿Ú×ÜÏß¿ÕÏÐÖÐ¶Ï */
+	USART_Cmd(UART4, ENABLE);							/* ä½¿èƒ½ä¸²å£ */
+	USART_ITConfig(UART4, USART_IT_IDLE, ENABLE);		/* ä½¿èƒ½ä¸²å£æ€»çº¿ç©ºé—²ä¸­æ–­ */
 }
 
 #if 0
